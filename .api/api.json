@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "acculynxapi",
+      "source": "@acculynxapi/v2.2607.0#dpghumo3e3r21",
+      "integrity": "sha512-Kj7SZsBqVW1DuXVUPv1XRevjK7S2hZTkJD4/eaYLlPlXZ6JfseF5u2euNqr1H0Ras189zzW9pvCvRrrOCZc8Qg==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}

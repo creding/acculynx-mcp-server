@@ -1,0 +1,23 @@
+{
+  "skill_name": "use-acculynx-mcp",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you look up Terri Landa's job and find out when the Patriot work crew is scheduled to start production?",
+      "expected_output": "Agent queries acculynx_get_job_production_schedule and reports the exact work order dates extracted from the history stream.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have a new lead for John Doe roofing. Create a job for him in AccuLynx under the Residential category.",
+      "expected_output": "Agent follows the multi-step workflow: first querying contacts/creating Contact, discovering job category IDs, and finally invoking acculynx_create_job.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Can you check the outstanding balance and active estimates for Ben Greer's job?",
+      "expected_output": "Agent routes queries through acculynx_get_job_financials and acculynx_get_job_estimates directly without guessing external accounting pointers.",
+      "files": []
+    }
+  ]
+}
