@@ -74,9 +74,9 @@ To ensure reliable operations, the server enforces several structural patterns t
 
 ### 1. Multi-Step Job Creation
 In AccuLynx, a Job entity cannot exist independently—it must be bound to a concrete **Contact**.
-*   **Step 1**: Search for a contact (`acculynx_get_contacts`) or create a new one (`acculynx_create_contact`).
-*   **Step 2**: Discover configuration IDs if needed (`acculynx_get_job_categories`, `acculynx_get_lead_sources`).
-*   **Step 3**: Invoke `acculynx_create_job` passing the resolved `contact.id`.
+*   **Step 1**: Search for a contact (`acculynx_get_contacts`). If a matching contact is found, **you must ask the user** whether they want to use the existing contact or create a new one. If no contact is found or the user wants a new one, create it (`acculynx_create_contact`).
+*   **Step 2**: Discover configuration IDs if needed (`acculynx_get_job_categories`, `acculynx_get_lead_sources`, `acculynx_get_users`).
+*   **Step 3**: Invoke `acculynx_create_job` passing the resolved `contact.id`. You can also seamlessly assign users to the job during this step by passing discovered user UUIDs into \`salesOwnerIds\`, \`companyRepresentativeIds\`, or \`arOwnerIds\`. If the user hasn't explicitly requested a specific person be assigned to the job, **you must ask the user** if they want to assign someone before proceeding.
 
 ### 2. Event-Sourced Production Schedules
 The AccuLynx API V2 does not expose top-level REST endpoints for Production Schedules.

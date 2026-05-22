@@ -32,7 +32,8 @@ In AccuLynx, a Job entity cannot exist independently—it must be bound to a con
 ### Step 1: Resolve the Contact Record
 You **must** pass a valid `contact.id` (UUID) to `acculynx_create_job`.
 1. First, search for the contact using `acculynx_get_contacts` (filter via `searchTerm`).
-2. If the contact does not exist, provision a new profile using `acculynx_create_contact`. Capture the returned Contact UUID.
+2. **CRITICAL**: If you find an existing contact that matches the request, you **must pause and ask the user** if they want to use the existing contact or create a new one.
+3. If the user chooses to create a new one (or if no contact is found), provision a new profile using `acculynx_create_contact`. Capture the returned Contact UUID.
 
 ### Step 2: Discover Referenced Categorizations (Optional)
 If the prompt requires tagging specific lead sources, categories, or trade specifications, query the discovery endpoints first:
@@ -40,14 +41,17 @@ If the prompt requires tagging specific lead sources, categories, or trade speci
 - `acculynx_get_job_categories` -> returns numerical IDs.
 - `acculynx_get_work_types` -> returns numerical IDs.
 - `acculynx_get_trade_types` -> returns Trade Type UUIDs.
+- `acculynx_get_users` -> returns User UUIDs (for assigning sales owners, company reps, or AR owners).
 
 ### Step 3: Invoke `acculynx_create_job`
-Supply the required `contact.id` along with any optional location blocks or discovered references.
+**CRITICAL**: Before creating the job, if the user has not explicitly requested a specific person be assigned, you **must pause and ask the user** if they want to assign someone (such as a Sales Owner or Company Representative).
+Supply the required `contact.id` along with any optional location blocks, discovered references, or assigned user arrays (`salesOwnerIds`, `companyRepresentativeIds`, `arOwnerIds`).
 
 ```json
 {
   "contact": { "id": "e3051410-..." },
   "jobCategory": { "id": 1 },
+  "salesOwnerIds": ["b1234567-..."],
   "locationAddress": {
     "street1": "123 Maple St",
     "city": "Homewood",

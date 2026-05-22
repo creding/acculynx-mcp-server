@@ -42,6 +42,9 @@ export const createJobSchema = z.object({
     id: z.string().uuid().describe("Trade Type UUID"),
   })).optional(),
   notes: z.string().optional().describe("Initial job description remarks"),
+  salesOwnerIds: z.array(z.string().uuid()).optional().describe("User UUIDs to assign as Sales Owners for the job"),
+  companyRepresentativeIds: z.array(z.string().uuid()).optional().describe("User UUIDs to assign as Company Representatives"),
+  arOwnerIds: z.array(z.string().uuid()).optional().describe("User UUIDs to assign as Accounts Receivable (AR) Owners"),
 });
 
 export const addJobDocumentSchema = z.object({

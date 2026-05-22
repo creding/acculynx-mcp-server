@@ -210,7 +210,29 @@ export function registerJobTools(server: McpServer) {
     async (payload) => {
       try {
         const client = getAccuLynxClient();
-        const res = await client.postjob(payload);
+        const { salesOwnerIds, companyRepresentativeIds, arOwnerIds, ...jobPayload } = payload;
+        
+        const res = await client.postjob(jobPayload);
+        const jobId = res.data?.id || (Array.isArray(res.data) && res.data.length > 0 ? res.data[0].id : null);
+        
+        if (jobId) {
+          if (salesOwnerIds && salesOwnerIds.length > 0) {
+            for (const id of salesOwnerIds) {
+              await client.postSalesOwnerForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign Sales Owner", id, err));
+            }
+          }
+          if (companyRepresentativeIds && companyRepresentativeIds.length > 0) {
+            for (const id of companyRepresentativeIds) {
+              await client.postCompanyRepresentativeForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign Company Rep", id, err));
+            }
+          }
+          if (arOwnerIds && arOwnerIds.length > 0) {
+            for (const id of arOwnerIds) {
+              await client.postAROwnerForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign AR Owner", id, err));
+            }
+          }
+        }
+        
         return formatToolResponse(res.data, undefined);
       } catch (error) {
         return {
