@@ -45,13 +45,13 @@ If the prompt requires tagging specific lead sources, categories, or trade speci
 
 ### Step 3: Invoke `acculynx_create_job`
 **CRITICAL**: Before creating the job, if the user has not explicitly requested a specific person be assigned, you **must pause and ask the user** if they want to assign someone (such as a Sales Owner or Company Representative).
-Supply the required `contact.id` along with any optional location blocks, discovered references, or assigned user arrays (`salesOwnerIds`, `companyRepresentativeIds`, `arOwnerIds`).
+Supply the required `contact.id` along with any optional location blocks, discovered references, or assigned user arrays (e.g. `companyRepresentativeIds`). **NOTE:** AccuLynx prevents assigning `salesOwnerIds` or `arOwnerIds` to a job until it reaches the "Approved" milestone. For newly created leads, always map user assignments to `companyRepresentativeIds`.
 
 ```json
 {
   "contact": { "id": "e3051410-..." },
   "jobCategory": { "id": 1 },
-  "salesOwnerIds": ["b1234567-..."],
+  "companyRepresentativeIds": ["b1234567-..."],
   "locationAddress": {
     "street1": "123 Maple St",
     "city": "Homewood",

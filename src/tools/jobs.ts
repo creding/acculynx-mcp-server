@@ -215,25 +215,30 @@ export function registerJobTools(server: McpServer) {
         const res = await client.postjob(jobPayload);
         const jobId = res.data?.id || (Array.isArray(res.data) && res.data.length > 0 ? res.data[0].id : null);
         
+        let assignmentErrors: string[] = [];
         if (jobId) {
           if (salesOwnerIds && salesOwnerIds.length > 0) {
             for (const id of salesOwnerIds) {
-              await client.postSalesOwnerForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign Sales Owner", id, err));
+              await client.postSalesOwnerForJob({ id }, { jobId }).catch((err: any) => assignmentErrors.push(`SalesOwner ${id}: ${handleApiError(err)}`));
             }
           }
           if (companyRepresentativeIds && companyRepresentativeIds.length > 0) {
             for (const id of companyRepresentativeIds) {
-              await client.postCompanyRepresentativeForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign Company Rep", id, err));
+              await client.postCompanyRepresentativeForJob({ id }, { jobId }).catch((err: any) => assignmentErrors.push(`CompanyRep ${id}: ${handleApiError(err)}`));
             }
           }
           if (arOwnerIds && arOwnerIds.length > 0) {
             for (const id of arOwnerIds) {
-              await client.postAROwnerForJob({ id }, { jobId }).catch((err: any) => console.error("Failed to assign AR Owner", id, err));
+              await client.postAROwnerForJob({ id }, { jobId }).catch((err: any) => assignmentErrors.push(`AROwner ${id}: ${handleApiError(err)}`));
             }
           }
         }
         
-        return formatToolResponse(res.data, undefined);
+        const responseData = res.data || {};
+        if (assignmentErrors.length > 0) {
+            responseData.assignmentErrors = assignmentErrors;
+        }
+        return formatToolResponse(responseData, undefined);
       } catch (error) {
         return {
           content: [{ type: "text" as const, text: handleApiError(error) }],
